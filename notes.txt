@@ -1,0 +1,13 @@
+1) npx create-react-app my-app
+2) Boostwatch.com -> download Lux css -> added in src folder https://mdbootstrap.com/docs/b5/react/
+3) npm install react-boostrap boostrap 
+4) https://react-bootstrap.github.io/components/alerts Bootstrap components
+5) font-awsome https://cdnjs.com/
+6) npm install axios for fetch backend data
+
+env\Scripts\activate
+
+
+DJANGO 
+to use image in models install pillow
+pip install pillow
