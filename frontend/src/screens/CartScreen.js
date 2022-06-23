@@ -11,25 +11,32 @@ import {addToCart} from '../actions/cartActions'
 
 // first method 
 
-function CartScreen({match, location}) {
+function CartScreen() {
+  const {id} = useParams()
+  const productId = id
   const navigate = useNavigate (); // zamiast history
-  const [searchParams, setSearchParams] = useSearchParams()
-  const qty = searchParams.get('qty')
-  const {id} =useParams()
-  console.log('qty, id  => ', qty)
-
+  const location = useLocation()
+  const qty = location.state ? Number(location.state) : 1
   
   const dispatch = useDispatch()
 
   const cart = useSelector(state => state.cart)
   const {cartItems} = cart
-
   
-  useEffect(()=>{
-    if(id){
-      dispatch(addToCart(id, qty))
-    }
-  }, [dispatch, id, qty])
+  useEffect(() => {
+      if (productId) {
+          dispatch(addToCart(productId, qty))
+      }
+      
+  }, [dispatch, productId, qty])
+
+  const removeFromCartHandler = (id) =>{
+    console.log('remove ',id )
+  }
+
+  const checkoutHandler = () =>{
+    navigate("/login?redirect=shipping")
+  }
 
   return (
     <Row>
@@ -60,7 +67,7 @@ function CartScreen({match, location}) {
                     value={item.qty}
                     onChange={(e) => {
                       navigate("/cart")
-                      dispatch(addToCart(item.product, e.target.value)) 
+                      dispatch(addToCart(item.product, Number(e.target.value))) 
                       console.log(e.target.value, 'tutaj jest')
                      }
                     }
@@ -75,11 +82,42 @@ function CartScreen({match, location}) {
 
                     </Form.Control>
                   </Col>
+                  <Col md={1}>
+                      <Button 
+                      type='button' 
+                      variant='light'
+                      onClick={()=> removeFromCartHandler(item.product)}
+                      >
+                        <i className='fas fa-trash'></i>
+                      </Button>
+                  </Col>
                 </Row>
               </ListGroup.Item>
             ))}
           </ListGroup>
         )}
+      </Col>
+      <Col md={4}>
+        <Card>
+          <ListGroup variant='flush'>
+            <ListGroup.Item>
+              <h2>Subtotal ({cartItems.reduce((acc, item)=> acc +item.qty, 0)})</h2>
+              Price ${cartItems.reduce((acc, item)=> acc +item.qty * item.price, 0).toFixed(2)}
+            </ListGroup.Item>
+          </ListGroup>
+
+          <ListGroup.Item>
+            <Button
+              type='button'
+              className='btn-block'
+              disabled={cartItems.length === 0}
+              onClick={checkoutHandler}
+            >
+                Proceed To Checkout
+              </Button>
+          </ListGroup.Item>
+
+        </Card>
       </Col>
     </Row>
   )
