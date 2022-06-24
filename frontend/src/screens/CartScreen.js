@@ -7,7 +7,7 @@ import Message from '../components/Message'
 // redux
 import {useDispatch, useSelector} from 'react-redux'
 // actions
-import {addToCart} from '../actions/cartActions'
+import {addToCart, removeFromCart} from '../actions/cartActions'
 
 // first method 
 
@@ -31,6 +31,7 @@ function CartScreen() {
   }, [dispatch, productId, qty])
 
   const removeFromCartHandler = (id) =>{
+    dispatch(removeFromCart(id))
     console.log('remove ',id )
   }
 
