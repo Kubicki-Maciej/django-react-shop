@@ -1,29 +1,24 @@
+#Django
 from django.shortcuts import render
-from django.http import JsonResponse
 
 # Imported model
-from .product import products
-from .models import Product
+from base.product import products
+from base.models import Product
 
 # RestFramework
 from rest_framework.response import Response
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated, IsAdminUser
+
+# handler to custom message
+from rest_framework import status
 
 # Serializer 
-from .serializer import ProductSerializer
+from base.serializer import ProductSerializer
 
 
-# Create your views here.
-@api_view(['GET'])
-def getRoutes(request):
-    routes = [
-        'jeden',
-        'dwa',
-        ]
-    return Response(routes)
 
-
-# Response dziala tylko wtedy kiedy ma dekorator api_view. https://www.django-rest-framework.org/api-guide/views/#api_view
+# PRODUCTS
 
 
 @api_view(['GET'])
@@ -34,12 +29,8 @@ def get_products(request):
     return Response(serializer.data)
 
 
-
 @api_view(['GET'])
 def get_single_product(request, pk):
     product = Product.objects.get(_id=pk)
     serializer = ProductSerializer(product, many=False)    
     return Response(serializer.data)
-
-
-

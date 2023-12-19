@@ -11,3 +11,24 @@ env\Scripts\activate
 DJANGO 
 to use image in models install pillow
 pip install pillow
+
+
+1)Jakiej wersji react'a używasz
+
+2)Gdy stworze se komponent kropki który bierze 4 agrumenty (a,b,c,d) i zrobię by zwracał mi podświetlone kropki 
+
+            <Nav.Item>
+                {a ? (
+                    <LinkContainer to='/login'>
+                    <Nav.Link>Login</Nav.Link>
+                </LinkContainer>
+                ):(
+                    <Nav.Link disabled>Login</Nav.Link>
+                )}
+            </Nav.Item>
+i tak dla każdego argumentu i go wywołuje na jakimś screenie 
+np :
+<StworzonyKomponent a/> to powinna mi się wyświeltać jedna kropka 
+
+admin 
+admin123
