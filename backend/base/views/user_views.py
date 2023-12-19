@@ -1,36 +1,35 @@
 #Django
 from django.shortcuts import render
-from django.http import JsonResponse
 from django.contrib.auth.hashers import make_password
 
 # Imported model
-from .product import products
-from .models import Product
 from django.contrib.auth.models import User
 # RestFramework
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
+
 # handler to custom message
 from rest_framework import status
 
 # Serializer 
-from .serializer import ProductSerializer, UserSerializer, UserSerializerWithToken
+from base.serializer import UserSerializer, UserSerializerWithToken
 
 # JWT 
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
 
 
-
-
-
-
+# USERS
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
 
     def validate(self, attrs):
         data = super().validate(attrs)
         serializer = UserSerializerWithToken(self.user).data
+        
+
+        # data['username'] = self.user.username
+        # data['email'] = self.user.email
 
         for k, v in serializer.items():
             data[k] = v
@@ -40,41 +39,12 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
 class MyTokenObtainPairView(TokenObtainPairView):
     serializer_class = MyTokenObtainPairSerializer
 
-# Create your views here.
-@api_view(['GET'])
-def getRoutes(request):
-    routes = [
-        'jeden',
-        'dwa',
-        ]
-    return Response(routes)
-
-# Response dziala tylko wtedy kiedy ma dekorator api_view. https://www.django-rest-framework.org/api-guide/views/#api_view
-
-# PRODUCTS
-
-
-@api_view(['GET'])
-def get_products(request):
-    """ return list of products"""
-    products = Product.objects.all()
-    serializer = ProductSerializer(products, many=True)
-    return Response(serializer.data)
-
-
-@api_view(['GET'])
-def get_single_product(request, pk):
-    product = Product.objects.get(_id=pk)
-    serializer = ProductSerializer(product, many=False)    
-    return Response(serializer.data)
-
-
-# USERS
 
 
 @api_view(['POST'])
 def register_user(request):
     data = request.data
+    # print(f'Data: {data}')
     try:
         user = User.objects.create(
             first_name=data['name'],
@@ -87,6 +57,26 @@ def register_user(request):
     except:
         message = {'detail' : 'User with this email already exists'}
         return Response(message, status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(['PUT'])
+@permission_classes([IsAuthenticated])
+def update_user_profile(request):
+    user = request.user
+    serializer = UserSerializerWithToken(user, many=False)
+    
+    data = request.data
+    
+    user.first_name  = data['name']
+    user.username = data['email']
+    user.emailname = data['email']
+
+    if data['password'] != '':
+        user.password = make_password(data['password'])
+
+    user.save()
+
+    return Response(serializer.data)
 
 
 @api_view(['GET'])
@@ -104,4 +94,5 @@ def get_users(request):
     users = User.objects.all()
     serializer = UserSerializer(users, many=True)
     return Response(serializer.data)
+
 

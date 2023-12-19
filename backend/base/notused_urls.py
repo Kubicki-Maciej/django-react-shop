@@ -9,6 +9,7 @@ from . import views
 
 urlpatterns = [
     path('user/login/', views.MyTokenObtainPairView.as_view(), name='token_obtain_pair'),
+    
     path('users/register/', views.register_user, name="register_user"),
     path('users/profile/', views.get_user_profile, name="get_user_profile"),
     path('users/', views.get_users, name="get_users"),

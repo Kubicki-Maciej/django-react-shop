@@ -14,7 +14,7 @@ import {addToCart, removeFromCart} from '../actions/cartActions'
 function CartScreen() {
   const {id} = useParams()
   const productId = id
-  const navigate = useNavigate (); // zamiast history
+  const navigate = useNavigate(); // zamiast history
   const location = useLocation()
   const qty = location.state ? Number(location.state) : 1
   
@@ -35,8 +35,21 @@ function CartScreen() {
     console.log('remove ',id )
   }
 
+  // 
+  const userLogin = useSelector(state => state.userLogin)
+  const { userInfo } = userLogin
+  console.log(userLogin)
+
   const checkoutHandler = () =>{
-    navigate("/login?redirect=shipping")
+        // Created by me if statment that check if user is loged if is navigate to shipping
+    // navigate("/login")? ??? ? ? ? ?? 
+    console.log('Checkout handler');
+    console.log(userInfo);
+    if(userInfo == null){
+      navigate("/login")
+    }else{
+      navigate('/shipping')
+    }
   }
 
   return (
@@ -108,6 +121,12 @@ function CartScreen() {
           </ListGroup>
 
           <ListGroup.Item>
+            {/* <Button
+              type='button'
+              className='btn-block'
+              disabled={cartItems.length === 0}
+              onClick={checkoutHandler}
+            > */}
             <Button
               type='button'
               className='btn-block'

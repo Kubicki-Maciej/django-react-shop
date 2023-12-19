@@ -41,14 +41,14 @@ class Order(models.Model):
     shipping_price = models.DecimalField(max_digits=7, decimal_places=2, null=True, blank=True)
     total_price = models.DecimalField(max_digits=7, decimal_places=2, null=True, blank=True)
     is_paid = models.BooleanField(default=False)
-    paid_at = models.DateTimeField(auto_now_add=False, null = True)
-    is_delivered = models.DateTimeField(auto_now_add=False, null = True)
-    delivered_at = models.DateTimeField(auto_now_add=False)
-    create_at = models.DateTimeField(auto_now_add=False, null = True)
+    paid_at = models.DateTimeField(auto_now_add=False, null=True, blank=True)
+    is_delivered = models.DateTimeField(auto_now_add=False, null=True, blank=True)
+    delivered_at = models.DateTimeField(auto_now_add=False, null=True, blank=True)
+    create_at = models.DateTimeField(auto_now_add=True)
     _id = models.AutoField(primary_key=True, editable=False)
 
     def __str__(self):
-        return str(self.create_at+' '+self._id)
+        return str(self.create_at)
 
 
 class OrderItem(models.Model):
